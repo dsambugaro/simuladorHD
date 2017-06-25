@@ -26,9 +26,8 @@ typedef struct{
 Lista* lista_cria();
 
 void lista_insere(Lista* l, T elemento, int posicao);
-void lista_insere_fim(Lista* l, T elemento);
 
-T* lista_remove1(Lista* l, int posicao);
+No* lista_remove1(Lista* l, int posicao);
 int lista_remove2(Lista* l, int posicao, T* endereco);
 T* lista_remove_elemento(Lista* l, T elemento, int (*compara)(void*,void*));
 
@@ -80,6 +79,8 @@ void posiciona_ponteiro(Lista *l, int posi, No* p){
 Lista* lista_cria(){
     Lista* l = (Lista*) malloc(sizeof(Lista));
     l->sentinela = novo_No(-1, -1);
+    l->sentinela->prox = l->sentinela;
+    l->sentinela->ant = l->sentinela;
     l->tam = 0;
     return l;
 }
@@ -94,6 +95,16 @@ void lista_insere(Lista* l, T ini, T fim, int posicao){
     novo->ant = p;
     p->prox->ant = novo;
     p->prox = novo;
+}
+
+No* lista_remove1(Lista* l, int posicao){
+
+    No* p = NULL;
+    posiciona_ponteiro(l, posicao, p);
+
+    p->prox->ant = p->ant;
+    p->ant->prox = p->prox;
+    return p;
 }
 
 #endif //LISTA_SENTINELA_H

@@ -17,7 +17,7 @@ typedef struct nosetor{
 typedef struct noarquivo{
     char nome[40];
     unsigned long tam;
-    NoSetor* setores;
+    No* setores;
     struct noarquivo* prox;
     struct noarquivo* ant;
 }NoArquivo;
@@ -46,16 +46,34 @@ TipoRetorno disco_recupera(Disco* d, char* nome, FILE* arquivoFisico);
 
 //Funções
 
+NoArquivo* lista_arquivo(){
+   NoArquivo* a = (NoArquivo*) malloc(sizeof(NoArquivo));
+   a->setores = novo_No(-1, -1);
+   a->setores->prox = a->setores;
+   a->setores->ant = a->setores;
+   a->tam = 0;
+   return a;
+}
+
 Disco* disco_cria(char* nome, unsigned long tamanho){
     Disco* d = (Disco*) malloc(sizeof(Disco));
     strcpy(d->nome, nome);
-    d->disco = (void*) calloc(100, sizeof(0));
+    d->disco = (void*) malloc(tamanho);
     d->livres = lista_cria();
-    d->tamDisco = 100;
-    d->espacoLivre = 100;
+    lista_insere(d->livres, 0, tamanho, 0);
+    d->tamDisco = tamanho;
+    d->espacoLivre = tamanho;
     d->espacoOcupado = 0;
     d->qtdeArquivos = 0;
+    d->arquivos = lista_arquivo();
     return d;
 }
+
+
+TipoRetorno disco_grava(Disco* d, char* arquivo){
+
+}
+
+
 
 #endif //DISCO_H
