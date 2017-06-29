@@ -134,7 +134,6 @@ TipoRetorno disco_grava(Disco* d, char* arquivo){
 
         d->espacoLivre -= qnt_gravado;
         d->espacoOcupado += qnt_gravado;
-
         falta_gravar -= qnt_gravado;
         if (falta_gravar == 0) {
             grava = 0;
