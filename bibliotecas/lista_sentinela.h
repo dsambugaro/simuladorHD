@@ -1,6 +1,8 @@
 
 // Danilo Sambugaro de Carlo
 // RA 1857347
+// Darlan Felipe Sousa Andrade
+// RA 1857355
 
 #ifndef LISTA_SENTINELA_H
 #define LISTA_SENTINELA_H
