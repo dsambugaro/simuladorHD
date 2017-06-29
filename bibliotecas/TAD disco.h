@@ -117,7 +117,7 @@ TipoRetorno disco_grava(Disco* d, char* arquivo){
     No* livre = d->livres->sentinela->prox;
 
     while(grava) {
-        qnt_gravado = fread(d->disco+(livre->ini), 1, ((livre->fim)-(livre->ini)+1), arq);
+        qnt_gravado = fread((d->disco+(livre->ini)), 1, ((livre->fim)-(livre->ini)+1), arq);
 
         if (qnt_gravado == ((livre->fim) - (livre->ini))) {
             No* setorArq = lista_remove(d->livres, 0);
@@ -126,7 +126,6 @@ TipoRetorno disco_grava(Disco* d, char* arquivo){
             setores->sentinela->ant->prox = setorArq;
             setores->sentinela->ant = setorArq;
         } else {
-            No* setorArq = novo_No();
             unsigned long novoIni = (livre->ini+qnt_gravado);
             lista_insere(setores, livre->ini, (novoIni-1));
             livre->ini = novoIni;
