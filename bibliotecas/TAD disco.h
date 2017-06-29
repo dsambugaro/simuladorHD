@@ -53,11 +53,32 @@ NoArquivo* lista_arquivo(){
    return a;
 }
 
+char* pega_nome_arquivo(char* arquivo){
+    unsigned int tam = strlen(arquivo);
+    char str[40];
+    char* retorna_nome = (char*) calloc(40, sizeof(char));
+    strcpy(str, arquivo);
+
+    int i;
+    int count = 0;
+    for (i = (tam-1);  str[i] != '/'; i--){
+        count++;
+    }
+
+    i++;
+
+    for (int j = 0; j < count; j++) {
+        retorna_nome[j] = str[i+j];
+    }
+    return retorna_nome;
+}
+
 
 void inserir_NoArquivo(NoArquivo* lista, char* arquivo, unsigned long arqTam){
 
     NoArquivo* a = (NoArquivo*) malloc(sizeof(NoArquivo));
-    strcpy(a->nome, arquivo);
+    char* nome = {pega_nome_arquivo(arquivo)};
+    strcpy(a->nome, nome);
     a->tam = arqTam;
     a->setores = lista_cria();
 
@@ -138,7 +159,91 @@ TipoRetorno disco_grava(Disco* d, char* arquivo){
             grava = 0;
         }
     }
+
+    d->qtdeArquivos++;
+    fclose(arq);
+    return SUCESSO;
 }
+
+NoArquivo* buscaArquivo(Disco* d, char* nome){
+    NoArquivo* p = d->arquivos->prox;
+    for (unsigned int i = 0; i < d->qtdeArquivos; i++) {
+        if ((strcmp(p->nome, nome)) == 0) {
+            return p;
+        } else {
+            p = p->prox;
+        }
+    }
+    return NULL;
+}
+
+int insere_livre(Lista* l, No* n){
+
+    if (l == NULL) {
+        return 0;
+    }
+    if (n == NULL) {
+        return 0;
+    }
+
+    No* p = l->sentinela->prox;
+
+    for (int i = 0; i < (l->tam); i++) {
+        if ((n->ini) == (p->fim)) {
+            p->fim = n->fim;
+            free(n);
+            return 1;
+
+        } else if ((n->fim) == (p->ini)) {
+            p->ini = n->ini;
+            free(n);
+            return 1;
+
+        } else {
+            p = p->prox;
+        }
+    }
+
+    p = l->sentinela;
+
+    n->ant = p->ant;
+    n->prox = p;
+    p->ant->prox = n;
+    p->ant = n;
+
+    return 1;
+}
+
+TipoRetorno disco_remove(Disco* d, char* nome){
+
+    NoArquivo* p = buscaArquivo(d, nome);
+
+    if (p == NULL) {
+        return ARQUIVO_INEXISTENTE;
+    }
+
+    No* setorArq = NULL;
+    Lista* setores = d->livres;
+    while ((p->setores->tam) < 0) {
+        setorArq = lista_remove(p->setores, 0);
+        insere_livre(setores, setorArq);
+    }
+
+    d->qtdeArquivos--;
+    d->espacoLivre += p->tam;
+    d->espacoOcupado -= p->tam;
+
+    arquivo_remove(){
+        
+    }
+
+
+
+
+    return SUCESSO;
+}
+
+
 
 
 
