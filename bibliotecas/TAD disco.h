@@ -48,11 +48,26 @@ TipoRetorno disco_recupera(Disco* d, char* nome, FILE* arquivoFisico);
 
 NoArquivo* lista_arquivo(){
    NoArquivo* a = (NoArquivo*) malloc(sizeof(NoArquivo));
-   a->setores = novo_No(-1, -1);
-   a->setores->prox = a->setores;
-   a->setores->ant = a->setores;
-   a->tam = 0;
+   a->prox = a;
+   a->ant = a;
    return a;
+}
+
+
+void inserir_arquivo(NoArquivo* lista, char* arquivo, unsigned long arqTam){
+
+    NoArquivo* a = (NoArquivo*) malloc(sizeof(NoArquivo));
+    strcpy(a->nome, arquivo);
+    a->tam = arqTam;
+    a->setores = novo_No(0, 0);
+    a->setores->prox = a->setores;
+    a->setores->ant = a->setores;
+
+    NoArquivo* p = lista;
+    a->ant = p->ant;
+    a->prox = p;
+    p->ant = a;
+    a->ant->prox = a;
 }
 
 Disco* disco_cria(char* nome, unsigned long tamanho){
@@ -69,8 +84,36 @@ Disco* disco_cria(char* nome, unsigned long tamanho){
     return d;
 }
 
+unsigned long arquivo_tam(char* arquivo){
+    FILE* arq =  fopen(arquivo, "rb");
+
+    if (arq == NULL) {
+        return ARQUIVO_INEXISTENTE;
+    }
+
+    fseek(arq, 0, SEEK_END);
+    unsigned long tamanho = ftell(arq);
+    fclose(arq);
+    return tamanho;
+}
 
 TipoRetorno disco_grava(Disco* d, char* arquivo){
+    unsigned long tamanhoArquivo = arquivo_tam(arquivo);
+
+    if (tamanhoArquivo > d->espacoLivre) {
+        return ESPACO_INSUFICIENTE;
+    }
+
+    inserir_arquivo(d->arquivos, arquivo, tamanhoArquivo);
+
+    FILE* arq = fopen(arquivo, "rb");
+    No* livre = d->livres->sentinela->prox;
+
+    
+
+
+
+
 
 }
 

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef int T;
+typedef unsigned long T;
 
 typedef struct no{
     T* ini;
@@ -26,8 +26,8 @@ typedef struct{
 Lista* lista_cria();
 
 void lista_insere(Lista* l, T elemento, int posicao);
-
 No* lista_remove1(Lista* l, int posicao);
+
 int lista_remove2(Lista* l, int posicao, T* endereco);
 T* lista_remove_elemento(Lista* l, T elemento, int (*compara)(void*,void*));
 
@@ -46,17 +46,10 @@ void posiciona_ponteiro(Lista *l, int posi, No* p);
 
 No* novo_No(T elem1, T elem2){
     No* n = (No*) malloc(sizeof(No));
-
-    if ((elem1 == -1) || (elem2 == -1)) {
-        n->ini = NULL;
-        n->fim = NULL;
-    } else {
-        n->ini = (T*) malloc(sizeof(T));
-        n->fim = (T*) malloc(sizeof(T));
-        *(n->ini) = elem1;
-        *(n->fim) = elem2;
-    }
-
+    n->ini = (T*) malloc(sizeof(T));
+    n->fim = (T*) malloc(sizeof(T));
+    *(n->ini) = elem1;
+    *(n->fim) = elem2;
     n->prox = NULL;
     n->ant = NULL;
     return n;
@@ -78,7 +71,7 @@ void posiciona_ponteiro(Lista *l, int posi, No* p){
 
 Lista* lista_cria(){
     Lista* l = (Lista*) malloc(sizeof(Lista));
-    l->sentinela = novo_No(-1, -1);
+    l->sentinela = novo_No(0, 0);
     l->sentinela->prox = l->sentinela;
     l->sentinela->ant = l->sentinela;
     l->tam = 0;
