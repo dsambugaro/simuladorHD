@@ -17,7 +17,7 @@ typedef struct nosetor{
 typedef struct noarquivo{
     char nome[40];
     unsigned long tam;
-    No* setores;
+    Lista* setores;
     struct noarquivo* prox;
     struct noarquivo* ant;
 }NoArquivo;
@@ -54,14 +54,12 @@ NoArquivo* lista_arquivo(){
 }
 
 
-void inserir_arquivo(NoArquivo* lista, char* arquivo, unsigned long arqTam){
+void inserir_NoArquivo(NoArquivo* lista, char* arquivo, unsigned long arqTam){
 
     NoArquivo* a = (NoArquivo*) malloc(sizeof(NoArquivo));
     strcpy(a->nome, arquivo);
     a->tam = arqTam;
-    a->setores = novo_No(0, 0);
-    a->setores->prox = a->setores;
-    a->setores->ant = a->setores;
+    a->setores = lista_cria();
 
     NoArquivo* p = lista;
     a->ant = p->ant;
@@ -75,7 +73,7 @@ Disco* disco_cria(char* nome, unsigned long tamanho){
     strcpy(d->nome, nome);
     d->disco = (void*) malloc(tamanho);
     d->livres = lista_cria();
-    lista_insere(d->livres, 0, tamanho, 0);
+    lista_insere(d->livres, 0, tamanho);
     d->tamDisco = tamanho;
     d->espacoLivre = tamanho;
     d->espacoOcupado = 0;
@@ -104,17 +102,44 @@ TipoRetorno disco_grava(Disco* d, char* arquivo){
         return ESPACO_INSUFICIENTE;
     }
 
-    inserir_arquivo(d->arquivos, arquivo, tamanhoArquivo);
+    inserir_NoArquivo(d->arquivos, arquivo, tamanhoArquivo);
 
     FILE* arq = fopen(arquivo, "rb");
+
+    if (arq == NULL) {
+        return ARQUIVO_INEXISTENTE;
+    }
+
+    unsigned long qnt_gravado = 0;
+    int grava = 1;
+    unsigned long falta_gravar = tamanhoArquivo;
+    Lista* setores = d->arquivos->ant->setores;
     No* livre = d->livres->sentinela->prox;
 
-    
+    while(grava) {
+        qnt_gravado = fread(d->disco+(livre->ini), 1, ((livre->fim)-(livre->ini)+1), arq);
 
+        if (qnt_gravado == ((livre->fim) - (livre->ini))) {
+            No* setorArq = lista_remove(d->livres, 0);
+            setorArq->ant = setores->sentinela->ant;
+            setorArq->prox = setores->sentinela;
+            setores->sentinela->ant->prox = setorArq;
+            setores->sentinela->ant = setorArq;
+        } else {
+            No* setorArq = novo_No();
+            unsigned long novoIni = (livre->ini+qnt_gravado);
+            lista_insere(setores, livre->ini, (novoIni-1));
+            livre->ini = novoIni;
+        }
 
+        d->espacoLivre -= qnt_gravado;
+        d->espacoOcupado += qnt_gravado;
 
-
-
+        falta_gravar -= qnt_gravado;
+        if (falta_gravar == 0) {
+            grava = 0;
+        }
+    }
 }
 
 

@@ -11,8 +11,8 @@
 typedef unsigned long T;
 
 typedef struct no{
-    T* ini;
-    T* fim;
+    T ini;
+    T fim;
     struct no* prox;
     struct no* ant;
 }No;
@@ -26,7 +26,7 @@ typedef struct{
 Lista* lista_cria();
 
 void lista_insere(Lista* l, T elemento, int posicao);
-No* lista_remove1(Lista* l, int posicao);
+No* lista_remove(Lista* l, int posicao);
 
 int lista_remove2(Lista* l, int posicao, T* endereco);
 T* lista_remove_elemento(Lista* l, T elemento, int (*compara)(void*,void*));
@@ -46,10 +46,8 @@ void posiciona_ponteiro(Lista *l, int posi, No* p);
 
 No* novo_No(T elem1, T elem2){
     No* n = (No*) malloc(sizeof(No));
-    n->ini = (T*) malloc(sizeof(T));
-    n->fim = (T*) malloc(sizeof(T));
-    *(n->ini) = elem1;
-    *(n->fim) = elem2;
+    n->ini = elem1;
+    n->fim = elem2;
     n->prox = NULL;
     n->ant = NULL;
     return n;
@@ -78,25 +76,25 @@ Lista* lista_cria(){
     return l;
 }
 
-void lista_insere(Lista* l, T ini, T fim, int posicao){
+void lista_insere(Lista* l, T ini, T fim){
 
-    No* p = NULL;
-
-    posiciona_ponteiro(l, (posicao-1), p);
+    No* p = l->sentinela;
     No* novo = novo_No(ini, fim);
-    novo->prox = p->prox;
-    novo->ant = p;
-    p->prox->ant = novo;
-    p->prox = novo;
+    novo->ant = p->ant;
+    novo->prox = p;
+    p->ant->prox = novo;
+    p->ant = novo;
+    (l->tam)++;
+
 }
 
-No* lista_remove1(Lista* l, int posicao){
+No* lista_remove(Lista* l, int posicao){
 
-    No* p = NULL;
+    No* p = l->sentinela;
     posiciona_ponteiro(l, posicao, p);
-
     p->prox->ant = p->ant;
     p->ant->prox = p->prox;
+    (l->tam)--;
     return p;
 }
 
