@@ -1,6 +1,8 @@
 
 // Danilo Sambugaro de Carlo
 // RA 1857347
+// Darlan Felipe Sousa Andrade
+// RA 1857355
 
 #ifndef LISTA_SENTINELA_H
 #define LISTA_SENTINELA_H
@@ -22,27 +24,11 @@ typedef struct{
     int tam;
 }Lista;
 
-
 Lista* lista_cria();
-
-void lista_insere(Lista* l, T elemento, int posicao);
+void lista_insere(Lista* l, T ini, T fim);
 No* lista_remove(Lista* l, int posicao);
-
-int lista_remove2(Lista* l, int posicao, T* endereco);
-T* lista_remove_elemento(Lista* l, T elemento, int (*compara)(void*,void*));
-
-T* lista_busca1(Lista* l, int posicao);
-int lista_busca2(Lista* l, int posicao, T* endereco);
-int lista_contem(Lista* l, T elemento, int (*compara)(void*,void*));
-int lista_posicao(Lista* l, T elemento, int (*compara)(void*,void*));
-
-int lista_tamanho(Lista* l);
-void lista_imprime(Lista* l, int (*imprimeElemento)(void*));
-
 No* novo_No(T elem1, T elem2);
 void posiciona_ponteiro(Lista *l, int posi, No* p);
-
-//FUNÇÕES IMPLEMENTADAS
 
 No* novo_No(T elem1, T elem2){
     No* n = (No*) malloc(sizeof(No));
