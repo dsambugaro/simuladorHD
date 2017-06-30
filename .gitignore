@@ -2,3 +2,4 @@
 *.gch
 simula_disco
 simula_disco_ferias.c
+*.o
