@@ -10,7 +10,6 @@
 #include "bibliotecas/TAD disco.h"
 
 int main(int argc, char const *argv[]) {
-    
     unsigned long tam = 10000000;
     char nome[40] = {"Unidade 1"};
     char arquivo[40] = {"photo.jpg"};
