@@ -179,12 +179,18 @@ int insere_livre(Lista* l, No* n){
 
     No* p = l->sentinela->prox;
     for (int i = 0; i < (l->tam); i++) {
-        if ((n->ini) == (p->fim)) {
-            p->fim = n->fim;
+        if ((n->fim) == ((p->ini)-1)) {
+            p->ini = n->ini;
+            if ((p->ant->fim) == ((p->ini)-1)) {
+              p->ant->fim = p->fim;
+              p->prox->ant = p->ant;
+              p->ant->prox = p->prox;
+              free(p);
+            }
             free(n);
             return 1;
-        } else if ((n->fim) == (p->ini)) {
-            p->ini = n->ini;
+        } else if ((n->ini) == ((p->fim)+1)) {
+            p->fim = n->fim;
             free(n);
             return 1;
         } else {
