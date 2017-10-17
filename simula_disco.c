@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "bibliotecas/TAD disco.h"
-
+asdasdasdasd
 
 int menuOpcoes(Disco* d);
 void insere_disco();
