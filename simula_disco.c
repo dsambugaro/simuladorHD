@@ -3,7 +3,6 @@
 #include <string.h>
 #include "bibliotecas/TAD disco.h"
 
-
 int menuOpcoes(Disco* d);
 void insere_disco();
 void insere_arquivo(Disco* d);
